@@ -26,7 +26,6 @@ class Pelicula{
     public String toString() {
         return "Pelicula{" + "titulo=" + titulo + ", autor=" + autor + ", anio=" + anio + '}';
     }
-    
 }
 class Soporte{
     public Pelicula pelicula;
