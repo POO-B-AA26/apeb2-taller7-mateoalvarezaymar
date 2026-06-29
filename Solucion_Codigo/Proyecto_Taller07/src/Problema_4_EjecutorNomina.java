@@ -1,4 +1,7 @@
 
+import java.util.ArrayList;
+
+
 /**
  *Se desea desarrollar un sistema de nómina para los trabajadores de una empresa. 
  *Los datos personales de los trabajadores son nombre y apellidos, dirección y DNI.
@@ -16,111 +19,224 @@
  * @author Mateo Alvarez
  * version 1.0
  */
-class Trabajador{
-    public String nombreApellido;
-    public String direccion;
-    public String dni;
-    public Jefe jefeAsignado;
-    public Trabajador(String nombreApellido, String direccion, String dni, Jefe jefeAsignado) {
-        this.nombreApellido = nombreApellido;
-        this.direccion = direccion;
-        this.dni = dni;
-        this.jefeAsignado = jefeAsignado;
+class NominaControlador {
+    private ArrayList<Trabajador> trabajadores;
+
+    public NominaControlador() {
+        this.trabajadores = new ArrayList<Trabajador>();
     }
+
+    public void agregarTrabajador(Trabajador t) {
+        trabajadores.add(t);
+    }
+
+    public void asignarJefe(Trabajador t, Jefe j) {
+        t.setJefeAsignado(j);
+    }
+
+    public ArrayList<Trabajador> getTrabajadores() {
+        return trabajadores;
+    }
+
+    public String obtenerNominas() {
+        String resultado = "";
+        for (Trabajador t : trabajadores) {
+            resultado += t.toString() + "\n";
+        }
+        return resultado;
+    }
+}
+class Trabajador {
+    private String nombreApellido;
+    private String direccion;
+    private String dni;
+    private Jefe jefeAsignado;
     public Trabajador(String nombreApellido, String direccion, String dni) {
         this.nombreApellido = nombreApellido;
         this.direccion = direccion;
         this.dni = dni;
         this.jefeAsignado = null;
     }
-
+    public String getNombreApellido() {
+        return nombreApellido;
+    }
+    public void setNombreApellido(String nombreApellido) {
+        this.nombreApellido = nombreApellido;
+    }
+    public String getDireccion() {
+        return direccion;
+    }
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+    public String getDni() {
+        return dni;
+    }
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+    public Jefe getJefeAsignado() {
+        return jefeAsignado;
+    }
+    public void setJefeAsignado(Jefe jefeAsignado) {
+        this.jefeAsignado = jefeAsignado;
+    }
     @Override
     public String toString() {
-        return "Trabajador{" + "nombreApellido=" + nombreApellido + ", direccion=" + direccion + ", dni=" + dni + ", jefeAsignado=" + jefeAsignado + '}';
+        return "Trabajador{nombreApellido=" + nombreApellido +
+               ", direccion=" + direccion +
+               ", dni=" + dni +
+               ", jefeAsignado=" + jefeAsignado + "}";
     }
 }
-class Jefe extends Trabajador{
-    public double sueldoFijo;
-    public Jefe(double sueldoFijo, String nombreApellido, String direccion, String dni) {
+class PorHoras extends Trabajador {
+    private double horasTrabajadas;
+    private double precioPorHora;
+    private double precioHoraExtra;
+    public PorHoras(String nombreApellido, String direccion, String dni,
+                    double horasTrabajadas, double precioPorHora, double precioHoraExtra) {
         super(nombreApellido, direccion, dni);
-        this.sueldoFijo = sueldoFijo;
-    }
-    @Override
-    public String toString() {
-        return "Jefe{" + "sueldoFijo=" + sueldoFijo + '}' + super.toString();
-    }
-}
-class FijoMensual extends Trabajador{
-    public double salarioMensual;
-
-    public FijoMensual(double salarioMensual, String nombreApellido, String direccion, String dni, Jefe jefeAsignado) {
-        super(nombreApellido, direccion, dni, jefeAsignado);
-        this.salarioMensual = salarioMensual;
-    }
-    @Override
-    public String toString() {
-        return "FijoMensual{" + "salarioMensual=" + salarioMensual + '}' + super.toString();
-    } 
-}
-class Comisionistas extends Trabajador{
-    public double porcentajeComision;
-    public double ventasRealizadas;
-
-    public Comisionistas(double porcentajeComision, double ventasRealizadas, String nombreApellido, String direccion, String dni, Jefe jefeAsignado) {
-        super(nombreApellido, direccion, dni, jefeAsignado);
-        this.porcentajeComision = porcentajeComision;
-        this.ventasRealizadas = 0.0;
-    }
-    public void fijarVentas(double ventas){
-        this.ventasRealizadas = ventas;
-    }
-    public double calcularSueldo(){
-        return (this.porcentajeComision / 100) * this.ventasRealizadas;
-    }
-
-    @Override
-    public String toString() {
-        return "Comisionistas{" + "porcentajeComision=" + porcentajeComision + ", ventasRealizadas=" + ventasRealizadas + ", Sueldo Total=$" + calcularSueldo() + "} " + super.toString();
-    }
-}
-class PorHoras extends Trabajador{
-    public double precioHoraNormal;
-    public double precioHoraExtra;
-    public int horasTrabajadas;
-    public PorHoras(double precioHoraNormal, double precioHoraExtra, String nombreApellido, String direccion, String dni, Jefe jefeAsignado) {
-        super(nombreApellido, direccion, dni, jefeAsignado);
-        this.precioHoraNormal = precioHoraNormal;
+        this.horasTrabajadas = horasTrabajadas;
+        this.precioPorHora = precioPorHora;
         this.precioHoraExtra = precioHoraExtra;
-        this.horasTrabajadas = 0;
     }
-    public void fijarHoras(int horas){
-        this.horasTrabajadas = horas;
+    public double getHorasTrabajadas() {
+        return horasTrabajadas;
     }
-    public double calcularSueldo(){
-        if(horasTrabajadas <= 40){
-            return horasTrabajadas * precioHoraNormal;
-        }else{
-            int horasExtras = horasTrabajadas - 40;
-            return (40 * precioHoraNormal) + (horasExtras * precioHoraExtra);
+    public void setHorasTrabajadas(double horasTrabajadas) {
+        this.horasTrabajadas = horasTrabajadas;
+    }
+    public double getPrecioPorHora() {
+        return precioPorHora;
+    }
+    public void setPrecioPorHora(double precioPorHora) {
+        this.precioPorHora = precioPorHora;
+    }
+    public double getPrecioHoraExtra() {
+        return precioHoraExtra;
+    }
+    public void setPrecioHoraExtra(double precioHoraExtra) {
+        this.precioHoraExtra = precioHoraExtra;
+    }
+    public double calcularNomina() {
+        if (horasTrabajadas <= 40) {
+            return horasTrabajadas * precioPorHora;
+        } else {
+            return (40 * precioPorHora) + ((horasTrabajadas - 40) * precioHoraExtra);
         }
     }
+
+    public String toString() {
+        return "PorHoras{horasTrabajadas=" + horasTrabajadas +
+               ", precioPorHora=" + precioPorHora +
+               ", precioHoraExtra=" + precioHoraExtra +
+               ", Sueldo Total=$" + calcularNomina() + "} " + super.toString();
+    }
+}
+ class Jefe extends Trabajador {
+
+    private double sueldoFijo;
+
+    public Jefe(String nombreApellido, String direccion, String dni, double sueldoFijo) {
+        super(nombreApellido, direccion, dni);
+        this.sueldoFijo = sueldoFijo;
+        setJefeAsignado(null);
+    }
+    public double getSueldoFijo() {
+        return sueldoFijo;
+    }
+    public void setSueldoFijo(double sueldoFijo) {
+        this.sueldoFijo = sueldoFijo;
+    }
+    public double calcularNomina() {
+        return sueldoFijo;
+    }
     @Override
     public String toString() {
-        return "PorHoras{" + "precioHoraNormal=" + precioHoraNormal + ", precioHoraExtra=" + precioHoraExtra + ", horasTrabajadas=" + horasTrabajadas + ", Sueldo Total=$" + calcularSueldo() + "} " + super.toString();
+        return "Jefe{sueldoFijo=" + sueldoFijo + "}" + super.toString();
+    }
+}
+class FijoMensual extends Trabajador {
+    private double salarioMensual;
+    public FijoMensual(String nombreApellido, String direccion, String dni, double salarioMensual) {
+        super(nombreApellido, direccion, dni);
+        this.salarioMensual = salarioMensual;
+    }
+    public double getSalarioMensual() {
+        return salarioMensual;
+    }
+    public void setSalarioMensual(double salarioMensual) {
+        this.salarioMensual = salarioMensual;
+    }
+    public double calcularNomina() {
+        return salarioMensual;
+    }
+    public String toString() {
+        return "FijoMensual{salarioMensual=" + salarioMensual +
+               ", Sueldo Total=$" + calcularNomina() + "} " + super.toString();
+    }
+}
+class Comisionista extends Trabajador {
+    private double porcentajeComision;
+    private double ventasRealizadas;
+    public Comisionista(String nombreApellido, String direccion, String dni,
+                        double porcentajeComision, double ventasRealizadas) {
+        super(nombreApellido, direccion, dni);
+        this.porcentajeComision = porcentajeComision;
+        this.ventasRealizadas = ventasRealizadas;
+    }
+    public double getPorcentajeComision() {
+        return porcentajeComision;
+    }
+    public void setPorcentajeComision(double porcentajeComision) {
+        this.porcentajeComision = porcentajeComision;
+    }
+    public double getVentasRealizadas() {
+        return ventasRealizadas;
+    }
+    public void setVentasRealizadas(double ventasRealizadas) {
+        this.ventasRealizadas = ventasRealizadas;
+    }
+    public double calcularNomina() {
+        return ventasRealizadas * (porcentajeComision / 100);
+    }
+    @Override
+    public String toString() {
+        return "Comisionistas{porcentajeComision=" + porcentajeComision +
+               ", ventasRealizadas=" + ventasRealizadas +
+               ", Sueldo Total=$" + calcularNomina() + "} " + super.toString();
     }
 }
 public class Problema_4_EjecutorNomina {
     public static void main(String[] args) {
-         Jefe jefeSeccion = new Jefe(2500.0, "Ing. Mario Alberto", "Av. De los Paltas", "11098237423");
-         Comisionistas empComision = new Comisionistas(10.0, 0.0, "Mateo Alvarez", "Loja Centro", "11059384394", jefeSeccion);
-         empComision.fijarVentas(5000.0);
-         System.out.println(jefeSeccion);
-         System.out.println(empComision);
+        NominaControlador controlador = new NominaControlador();
+
+        Jefe jefe1 = new Jefe("Ing. Mario Alberto", "Av. De los Paltas", "11098237423", 2500.0);
+
+        Comisionista t1 = new Comisionista("Mateo Alvarez", "Loja Centro", "11059384394", 10.0, 5000.0);
+        t1.setJefeAsignado(jefe1);
+
+        FijoMensual t2 = new FijoMensual("Laura Sanchez", "Av. Universidad", "11034567891", 800.0);
+        t2.setJefeAsignado(jefe1);
+
+        PorHoras t3 = new PorHoras("Pedro Ramirez", "Calle Sucre", "11076543210", 50.0, 5.0, 8.0);
+        t3.setJefeAsignado(jefe1);
+
+        controlador.agregarTrabajador(jefe1);
+        controlador.agregarTrabajador(t1);
+        controlador.agregarTrabajador(t2);
+        controlador.agregarTrabajador(t3);
+
+        System.out.println(controlador.obtenerNominas());
     }
 }
 /**
  * run:
- * Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}
- * Comisionistas{porcentajeComision=10.0, ventasRealizadas=5000.0, Sueldo Total=$500.0} Trabajador{nombreApellido=Mateo Alvarez, direccion=Loja Centro, dni=11059384394, jefeAsignado=Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}}
- * BUILD SUCCESSFUL (total time: 0 seconds)
+Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}
+Comisionistas{porcentajeComision=10.0, ventasRealizadas=5000.0, Sueldo Total=$500.0} Trabajador{nombreApellido=Mateo Alvarez, direccion=Loja Centro, dni=11059384394, jefeAsignado=Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}}
+FijoMensual{salarioMensual=800.0, Sueldo Total=$800.0} Trabajador{nombreApellido=Laura Sanchez, direccion=Av. Universidad, dni=11034567891, jefeAsignado=Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}}
+PorHoras{horasTrabajadas=50.0, precioPorHora=5.0, precioHoraExtra=8.0, Sueldo Total=$280.0} Trabajador{nombreApellido=Pedro Ramirez, direccion=Calle Sucre, dni=11076543210, jefeAsignado=Jefe{sueldoFijo=2500.0}Trabajador{nombreApellido=Ing. Mario Alberto, direccion=Av. De los Paltas, dni=11098237423, jefeAsignado=null}}
+
+BUILD SUCCESSFUL (total time: 0 seconds)
+
  */
